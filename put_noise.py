@@ -36,9 +36,11 @@ def plot_hist_graph(img_with_noise):
 	plt.ylabel("Pixel frequency")
 	
 	try:
+		os.mkdir("./graphs/")
+		os.mkdir("./graphs/histograms")
 		plt.savefig("./graphs/histograms/{}_histogram_{}_noise.png".format(choice_image, choice_noise))
+	
 	except:
-		os.mkdir("./graphs/histograms")	#TO DO: Make this command work
 		plt.savefig("./graphs/histograms/{}_histogram_{}_noise.png".format(choice_image, choice_noise))
 		
 	plt.show()
@@ -87,14 +89,14 @@ def plot_corr_graphs(img_with_noise, img_without_noise):
 		
 		# Plot graph
 		plt.scatter(temp_array, a, s=5)
-		plt.title("Correlation Plot in {} spectrum\nfor {} with {}% noise\nCorrelation coefficient = {}".format(spectrum.title(), choice_image.title(), choice_noise, corr_matrix[0][1]))
+		plt.title("Correlation Plot in {} spectrum for {} with {}% noise\nCorrelation coefficient = {}".format(spectrum.title(), choice_image.title(), choice_noise, corr_matrix[0][1]))
 		plt.xlabel("Image without noise")
 		plt.ylabel("Image with noise")
 		
 		try:
+			os.mkdir("./graphs/corr_plots")
 			plt.savefig("./graphs/corr_graphs/{}_{}_correlation_{}_noise.png".format(spectrum, choice_image, choice_noise))
 		except:
-			os.mkdir("./graphs")
 			plt.savefig("./graphs/corr_graphs/{}_correlation_{}_noise.png".format(spectrum, choice_image, choice_noise))
 			
 		plt.show()
@@ -135,9 +137,10 @@ noisy_image = put_noise_in_image(grayscale_image, choice_noise)
 
 # Save image 
 try:
+	os.mkdir("./images/")
 	cv2.imwrite("./images/{}_with_noise_{}_percent.jpg".format(choice_image, choice_noise), noisy_image)
+
 except:
-	os.mkdir("./images/")	#TO DO: Make this command work
 	cv2.imwrite("./images/{}_with_noise_{}_percent.jpg".format(choice_image, choice_noise), noisy_image)
 
 # Ask if they want graphs to be plotted
