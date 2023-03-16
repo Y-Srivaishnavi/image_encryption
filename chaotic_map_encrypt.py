@@ -8,16 +8,21 @@ import matplotlib.pyplot as plt
 # Function to plot histogram of image	
 def plot_hist_graph(encrypted_array):
 	
-	plt.hist(encrypted_array, bins=256, color='skyblue')
+	# Numpy array needs to be typecast into float32 to adjust depth before conversion to grayscale
+	encrypted_array = np.float32(encrypted_array)
+	encrypted_array = cv2.cvtColor(encrypted_array, cv2.COLOR_BGR2GRAY)
+	
+	plt.hist(encrypted_array.flatten(), bins=256, color='skyblue')
 	plt.title("Histogram for {} with {} map encryption".format(choice_image.title(), choice_map))
 	plt.xlabel("Pixel intensity")
 	plt.ylabel("Pixel frequency")
 	
 	try:
+		os.mkdir("./encrypted_images/graphs/")
+		os.mkdir("./encrypted_images/graphs/histograms")
 		plt.savefig("./encrypted_images/graphs/histograms/{}_histogram_{}_map.png".format(choice_image, choice_map))
 	
 	except:
-		os.mkdir("./encrypted_images/graphs/histograms")	#TO DO: Make this command work
 		plt.savefig("./encrypted_images/graphs/histograms/{}_histogram_{}_map.png".format(choice_image, choice_map))
 		
 	plt.show()
@@ -73,15 +78,16 @@ def plot_corr_graphs(encrypted_img, original_img):
 		
 		# Plot graph
 		plt.scatter(temp_array, a, s=5)
-		plt.title("Correlation Plot in {} spectrum\nfor {} with {} map encryption\nCorrelation coefficient = {}".format(spectrum.title(), choice_image.title(), choice_map.title(), corr_matrix[0][1]))
+		plt.title("Correlation Plot in {} spectrum for {} with {} map encryption\nCorrelation coefficient = {}".format(spectrum.title(), choice_image.title(), choice_map.title(), corr_matrix[0][1]))
 		plt.xlabel("Image without encryption")
 		plt.ylabel("Image with encryption")
 		
 		try:
-			plt.savefig("./encrypted_images/graphs/corr_graphs/{}_{}_correlation_{}_noise.png".format(spectrum, choice_image, choice_map))
+			os.mkdir("./encrypted_images/graphs/corr_graphs")
+			plt.savefig("./encrypted_images/graphs/corr_graphs/{}_{}_correlation_{}_map.png".format(spectrum, choice_image, choice_map))
+		
 		except:
-			os.mkdir("./graphs")
-			plt.savefig("./encrypted_images/graphs/corr_graphs/{}_correlation_{}_noise.png".format(spectrum, choice_image, choice_map))
+			plt.savefig("./encrypted_images/graphs/corr_graphs/{}_correlation_{}_map.png".format(spectrum, choice_image, choice_map))
 			
 		plt.show()
 	
@@ -126,6 +132,10 @@ while True:
 		choice_map = 'sine'
 		r = 3.9
 		break
+	
+	else:
+		print("Invalid choice, try again.\n")
+		break
 
 # Read image and its shape
 plain_img = cv2.imread("../{}.jpg".format(choice_image))
@@ -165,14 +175,14 @@ encrypted_image = np.reshape(encrypted_array, (height, width, channels))
 
 # Save file
 try:
+	os.mkdir("encrypted_images")
 	cv2.imwrite("./encrypted_images/{}_encrypted_{}.png".format(choice_map, choice_image), encrypted_image)
 except:
-	os.mkdir("encrypted_images")
 	cv2.imwrite("./encrypted_images/{}_encrypted_{}.png".format(choice_map, choice_image), encrypted_image)
 
 # Ask if they want graphs to be plotted
 choice_graphs = input("Do you want to plot graphs for this image? (Y/n) ")
 
 if choice_graphs.casefold() == 'y':
-	plot_hist_graph(encrypted_array)
+	plot_hist_graph(encrypted_image)
 	plot_corr_graphs(encrypted_image, plain_img)
