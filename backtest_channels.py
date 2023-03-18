@@ -114,7 +114,6 @@ while True:
 		
 	else:
 		print("Invalid choice, try again.\n")
-		break
 
 # Read original image
 original_image = cv2.imread("../{}.jpg".format(choice_image))
