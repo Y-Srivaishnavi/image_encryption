@@ -110,7 +110,7 @@ while True:
 		
 	else:
 		print("Invalid choice, try again.\n")
-		break
+		continue
 	
 	print("Select chaotic map: ")
 	print("1. Logistic")
